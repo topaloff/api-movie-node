@@ -8,8 +8,11 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      feature: {
-        type: Sequelize.BOOLEAN
+      actorId: {
+        type: Sequelize.INTEGER
+      },
+      movieId: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,

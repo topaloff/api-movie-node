@@ -7,9 +7,11 @@ module.exports = (sequelize, DataTypes) => {
     picture: DataTypes.STRING
   }, {});
   Actor.associate = function(models) {
-    Actor.associate = (models) => {
-      Actor.belongsToMany(models.Movie, { as: 'MoviesForActor', through: models.MovieActor, foreignKey: 'actor_id'});
-    }
+   Actor.belongsToMany(models.Movie, {
+      through: 'MovieActor',
+      as: 'movie',
+      foreignKey: 'actorId'
+    });
     Actor.belongsTo(models.Country, {
       onDelete: "CASCADE",
       foreignKey: {

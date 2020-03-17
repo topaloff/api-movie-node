@@ -9,9 +9,11 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Movie.associate = function(models) {
     // associations can be defined here
-    Movie.associate = (models) => {
-      Movie.belongsToMany(models.Actor, { as: 'ActorsInMovie', through: models.MovieActor, foreignKey: 'movie_id'});
-    }
+    Movie.belongsToMany(models.Actor, {
+      through: 'MovieActor',
+      as: 'actor',
+      foreignKey: 'movieId'
+    });
 
     Movie.belongsTo(models.Category, {
       onDelete: "CASCADE",
