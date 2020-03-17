@@ -1,4 +1,6 @@
 const Actor = require('../models/').Actor;
+const Gender = require('../models/').Gender;
+const Country = require('../models/').Country;
 
 /**
  * @api {get} /actors Show all actors
@@ -14,7 +16,14 @@ const Actor = require('../models/').Actor;
  *     }]
  */
 exports.actor_list = (req,res,next)=>{
-    Actor.findAll({})
+    Actor.findAll({
+        attributes: ['id','name','firstname','birth','picture'], //Choose which fields to show
+        include : [ //Show the association
+            { model: Gender, attributes: ['id','name']},
+            { model: Country, attributes: ['id','name'] }
+        ],
+        order: [['name', 'ASC']]
+    })
     .then(actors => {
         res.json(actors);
     })

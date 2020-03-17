@@ -1,4 +1,5 @@
 const Movie = require('../models/').Movie;
+const MovieActor = require('../models/').MovieActor;
 
 /**
  * @api {get} /movies Show all movies
@@ -145,6 +146,33 @@ exports.movie_delete = (req,res,next) => {
     })
     .then(movie => {
         res.json({message: "Movie deleted"});
+    })
+    .catch(error=>{
+        res.status(400);
+        res.json(error);
+    })
+}
+
+/**
+ * @api {ActorMovie} /movies/actor/:id Add actor to a movie
+ * @apiName addActor
+ * @apiGroup Movie
+ * 
+ * @apiParam {Number} id id of the Movie.
+ * 
+ * @apiSuccess {String} message Movie deleted.
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       message: "Movie deleted"
+ *     }
+ */
+exports.movie_add_actor = (req, res, next) => {
+    const id = req.params.id;
+    const movieActor = {"movieId":id, "actorId":req.body.ActorId};
+    MovieActor.create(movieActor)
+    .then(data => {
+        res.json({message: "Actor Added"});
     })
     .catch(error=>{
         res.status(400);

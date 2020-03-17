@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var countriesRouter = require('./routes/countries');
+var categoriesRouter = require('./routes/categories');
 var gendersRouter = require('./routes/genders');
 var actorsRouter = require('./routes/actors');
 var moviesRouter = require('./routes/movies');
@@ -23,6 +24,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/countries', countriesRouter);
+app.use('/categories', categoriesRouter);
 app.use('/genders', gendersRouter);
 app.use('/actors', actorsRouter);
 app.use('/movies', moviesRouter);
