@@ -1,4 +1,6 @@
 const Movie = require('../models/').Movie;
+const Category = require('../models/').Category;
+const Actor = require('../models/').Actor;
 const MovieActor = require('../models/').MovieActor;
 
 /**
@@ -15,8 +17,20 @@ const MovieActor = require('../models/').MovieActor;
  *     }]
  */
 exports.movie_list = (req,res,next)=>{
-    Movie.findAll({})
+    Movie.findAll({
+        attributes: ['id','title','description','picture','year','note'], //Choose which fields to show
+        include: [
+            {
+                model: Actor,
+                attributes: ['id','name','firstname','birth','picture']
+            }   
+        ],
+        order: [['title', 'ASC']]
+    })
     .then(movies => {
+        MovieActor.findAll({
+
+        })
         res.json(movies);
     })
     .catch(error=>{

@@ -8,10 +8,9 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Actor.associate = function(models) {
    Actor.belongsToMany(models.Movie, {
-      through: 'MovieActor',
-      as: 'movie',
-      foreignKey: 'actorId'
+      through: 'MovieActor'
     });
+    Actor.hasMany(models.MovieActor);
     Actor.belongsTo(models.Country, {
       onDelete: "CASCADE",
       foreignKey: {

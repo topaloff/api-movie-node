@@ -20,6 +20,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   MovieActor.associate = function(models) {
     // associations can be defined here
+    MovieActor.belongsTo(models.Actor);
+    MovieActor.belongsTo(models.Movie);
   };
   return MovieActor;
 };
