@@ -183,7 +183,7 @@ exports.movie_delete = (req,res,next) => {
  */
 exports.movie_add_actor = (req, res, next) => {
     const id = req.params.id;
-    const movieActor = {"movieId":id, "actorId":req.body.ActorId};
+    const movieActor = {"MovieId":id, "ActorId":req.body.actorId};
     MovieActor.create(movieActor)
     .then(data => {
         res.json({message: "Actor Added"});
