@@ -9,6 +9,7 @@ var categoriesRouter = require('./routes/categories');
 var gendersRouter = require('./routes/genders');
 var actorsRouter = require('./routes/actors');
 var moviesRouter = require('./routes/movies');
+var usersRouter = require('./routes/users');
 
 var app = express();
 require('dotenv').config({path: __dirname + '/.env'});
@@ -28,6 +29,7 @@ app.use('/categories', categoriesRouter);
 app.use('/genders', gendersRouter);
 app.use('/actors', actorsRouter);
 app.use('/movies', moviesRouter);
+app.use('/users', usersRouter);
 
 
 // catch 404 and forward to error handler
