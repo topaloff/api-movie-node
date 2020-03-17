@@ -1,5 +1,6 @@
 const Actor = require('../models/').Actor;
 const Gender = require('../models/').Gender;
+const Movie = require('../models/').Movie;
 const Country = require('../models/').Country;
 
 /**
@@ -20,7 +21,11 @@ exports.actor_list = (req,res,next)=>{
         attributes: ['id','name','firstname','birth','picture'], //Choose which fields to show
         include : [ //Show the association
             { model: Gender, attributes: ['id','name']},
-            { model: Country, attributes: ['id','name'] }
+            { model: Country, attributes: ['id','name'] },
+            {
+                model: Movie,
+                attributes: ['title','description','picture','year','note']
+            }   
         ],
         order: [['name', 'ASC']]
     })
