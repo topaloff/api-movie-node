@@ -20,6 +20,24 @@ module.exports = {
       picture: {
         type: Sequelize.STRING
       },
+      countryId:{
+        type: Sequelize.INTEGER,
+        onDelete: "CASCADE",
+        allowNull: false,
+        references: {
+          model: 'Countries',
+          key: 'id'
+        }
+      },
+      genderId:{
+        type: Sequelize.INTEGER,
+        onDelete: "CASCADE",
+        allowNull: false,
+        references: {
+          model: 'Genders',
+          key: 'id'
+        }
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

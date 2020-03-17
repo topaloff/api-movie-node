@@ -23,6 +23,15 @@ module.exports = {
       note: {
         type: Sequelize.FLOAT
       },
+      categoryId:{
+        type: Sequelize.INTEGER,
+        onDelete: "CASCADE",
+        allowNull: false,
+        references: {
+          model: 'Categories',
+          key: 'id'
+        }
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

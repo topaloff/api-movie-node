@@ -60,7 +60,7 @@ exports.country_detail = (req,res,next)=>{
  * @apiParam {String} name name of the Country.
  * @apiParamExample {json} Request-Example:
 *     {
-*       "name": "Blonde"
+*       "name": "France"
 *     }
  * 
  * @apiSuccess {String} _id id of the Country.
@@ -69,7 +69,9 @@ exports.country_detail = (req,res,next)=>{
  *     HTTP/1.1 200 OK
  *     {
  *       "id": 1,
- *       "name": "Blonde"
+ *       "name": "France",
+ *       "updatedAt": "2020-03-17T15:26:58.984Z",
+ *       "createdAt": "2020-03-17T15:26:58.984Z"
  *     }
  */
 exports.country_add = (req,res,next) => {
