@@ -90,10 +90,29 @@ exports.movie_detail = (req,res,next)=>{
  *     }
  */
 exports.movie_add = (req,res,next) => {
+    if (req.file) {
+        console.log('Uploading file...');
+        var filename = 'uploads/movies/'+req.file.filename;
+    } else {
+        console.log('No File Uploaded');
+        var filename = '';
+    }
     Movie.create(req.body)
     .then(movie => {
-        res.json(movie);
-    })
+        const id = movie.id;
+        Movie.update({"picture":filename}, {
+            where: {
+              id: id
+            }
+        })
+        .then(data => {
+            res.json(movie);
+        })
+        .catch(error=>{
+            res.status(400);
+            res.json(error);
+        })
+    })  
     .catch(error=>{
         res.status(400);
         res.json(error);
@@ -123,13 +142,36 @@ exports.movie_add = (req,res,next) => {
  */
 exports.movie_edit = (req,res,next) => {
     const id = req.params.id;
+    if (req.file) {
+        console.log('Uploading file...');
+        var filename = 'uploads/movies/'+req.file.filename;
+    } else {
+        console.log('No File Uploaded');
+        var filename = '';
+    }
     Movie.update(req.body, {
         where: {
           id: id
         }
     })
     .then(movie => {
-        res.json({message: `Movie ${id} est modifie`});
+        if (req.file) {
+            Movie.update({"picture":filename}, {
+                where: {
+                id: id
+                }
+            })
+            .then(data => {
+                res.json({message: `Movie ${id} est modifie`});
+            })
+            .catch(error=>{
+                res.status(400);
+                res.json(error);
+            })
+        }
+        else{
+            res.json({message: `Movie ${id} est modifie`});
+        }
     })
     .catch(error=>{
         res.status(400);
@@ -183,15 +225,19 @@ exports.movie_delete = (req,res,next) => {
  */
 exports.movie_add_actor = (req, res, next) => {
     const id = req.params.id;
-    const movieActor = {"MovieId":id, "ActorId":req.body.actorId};
-    MovieActor.create(movieActor)
-    .then(data => {
-        res.json({message: "Actor Added"});
+    console.log(req.body.actorId)   
+    Movie.findByPk(id)
+    .then(movie => {
+        movie.setActors(req.body.actorId)
+        .then(data => res.json('ok'))
+        .catch(error=>{
+            res.status(400);
+            res.json(error);
+        })
     })
     .catch(error=>{
         res.status(400);
         res.json(error);
     })
 }
-
 

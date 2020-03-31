@@ -24,33 +24,6 @@ exports.category_list = (req,res,next)=>{
     })
 }
 
-/**
- *  * @api {get} /categories/:id Show detail of one category
- * @apiName getCategoriesDetail
- * @apiGroup Category
- * 
- * @apiParam {Number} id of the Category
- * 
- * @apiSuccess {String} _id id of the Category.
- * @apiSuccess {String} name name of the Category.
- * @apiSuccessExample {json} Success-Response:
- *     HTTP/1.1 200 OK
- *     {
- *       "id": 1,
- *       "name": "Blonde"
- *     }
- */
-exports.category_detail = (req,res,next)=>{
-    const id = req.params.id
-    Category.findByPk(id)
-    .then(category => {
-        res.json(category);
-    })
-    .catch(error=>{
-        res.status(400);
-        res.json({message : 'il y a rien la'});
-    })
-}
 
 /**
  * @api {post} /categories/add Add one category
@@ -153,3 +126,31 @@ exports.category_delete = (req,res,next) => {
 }
 
 
+
+/**
+ * @api {get} /categories/:id Show detail of one category
+ * @apiName getCategoriesDetail
+ * @apiGroup Category
+ * 
+ * @apiParam {Number} id of the Category
+ * 
+ * @apiSuccess {String} _id id of the Category.
+ * @apiSuccess {String} name name of the Category.
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "id": 1,
+ *       "name": "Blonde"
+ *     }
+ */
+exports.category_detail = (req,res,next)=>{
+    const id = req.params.id
+    Category.findByPk(id)
+    .then(category => {
+        res.json(category);
+    })
+    .catch(error=>{
+        res.status(400);
+        res.json({message : 'il y a rien la'});
+    })
+}

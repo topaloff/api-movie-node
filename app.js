@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var cors = require('cors')
 
 var countriesRouter = require('./routes/countries');
 var categoriesRouter = require('./routes/categories');
@@ -12,6 +13,7 @@ var moviesRouter = require('./routes/movies');
 var usersRouter = require('./routes/users');
 
 var app = express();
+app.use(cors());
 require('dotenv').config({path: __dirname + '/.env'});
 
 // view engine setup

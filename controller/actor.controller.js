@@ -3,6 +3,20 @@ const Gender = require('../models/').Gender;
 const Movie = require('../models/').Movie;
 const Country = require('../models/').Country;
 
+
+const multer = require('multer');
+
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, './public/uploads/actors');
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now()+'-'+file.originalname);
+    }
+});
+
+const upload = multer({ storage });
 /**
  * @api {get} /actors Show all actors
  * @apiName getActors
@@ -88,16 +102,36 @@ exports.actor_detail = (req,res,next)=>{
  *       "createdAt": "2020-03-17T15:26:58.984Z"
  *     }
  */
-exports.actor_add = (req,res,next) => {
+exports.actor_add =  (req,res,next) => {
+    if (req.file) {
+        console.log('Uploading file...');
+        var filename = 'uploads/actors/'+req.file.filename;
+    } else {
+        console.log('No File Uploaded');
+        var filename = '';
+    }
     Actor.create(req.body)
     .then(actor => {
-        res.json(actor);
-    })
+        const id = actor.id;
+        Actor.update({"picture":filename}, {
+            where: {
+              id: id
+            }
+        })
+        .then(data => {
+            res.json(actor);
+        })
+        .catch(error=>{
+            res.status(400);
+            res.json(error);
+        })
+    })  
     .catch(error=>{
         res.status(400);
         res.json(error);
     })
 }
+
 
 /**
  * @api {put} /actors/edit/:id Edit one actor
@@ -122,13 +156,36 @@ exports.actor_add = (req,res,next) => {
  */
 exports.actor_edit = (req,res,next) => {
     const id = req.params.id;
+    if (req.file) {
+        console.log('Uploading file...');
+        var filename = 'uploads/actors/'+req.file.filename;
+    } else {
+        console.log('No File Uploaded');
+        var filename = '';
+    }
     Actor.update(req.body, {
         where: {
           id: id
         }
     })
     .then(actor => {
-        res.json({message: `Actor ${id} est modifie`});
+        if (req.file) {
+            Actor.update({"picture":filename}, {
+                where: {
+                id: id
+                }
+            })
+            .then(data => {
+                res.json({message: `Actor ${id} est modifie`});
+            })
+            .catch(error=>{
+                res.status(400);
+                res.json(error);
+            })
+        }
+        else{
+            res.json({message: `Actor ${id} est modifie`});
+        }
     })
     .catch(error=>{
         res.status(400);
@@ -167,3 +224,33 @@ exports.actor_delete = (req,res,next) => {
 }
 
 
+/**
+ * @api {ActorMovie} /actors/movies/:id Add movie to an actor
+ * @apiName addActor
+ * @apiGroup Movie
+ * 
+ * @apiParam {Number} id id of the Movie.
+ * 
+ * @apiSuccess {String} message Movie deleted.
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       message: "Movie deleted"
+ *     }
+ */
+exports.actor_add_movie = (req, res, next) => {
+    const id = req.params.id;    
+    Actor.findByPk(id)
+    .then(actor => {
+        actor.setActors(req.body.actorId)
+        .then(data => res.json('ok'))
+        .catch(error=>{
+            res.status(400);
+            res.json(error);
+        })
+    })
+    .catch(error=>{
+        res.status(400);
+        res.json(error);
+    })
+}
