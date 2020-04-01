@@ -2,7 +2,7 @@ const Actor = require('../models/').Actor;
 const Gender = require('../models/').Gender;
 const Movie = require('../models/').Movie;
 const Country = require('../models/').Country;
-
+const uuidv4 = require("uuid/v4");
 
 const multer = require('multer');
 
@@ -110,7 +110,14 @@ exports.actor_add =  (req,res,next) => {
         console.log('No File Uploaded');
         var filename = '';
     }
-    Actor.create(req.body)
+    Actor.create({
+        id: uuidv4(),
+        name: req.body.name,
+        firstname: req.body.firstname,
+        birth: req.body.birth,
+        CountryId: req.body.CountryId,
+        GenderId: req.body.GenderId
+    })
     .then(actor => {
         const id = actor.id;
         Actor.update({"picture":filename}, {

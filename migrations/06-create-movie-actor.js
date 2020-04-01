@@ -9,7 +9,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       actorId: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
         onDelete: "CASCADE",
         allowNull: false,
         references: {
@@ -18,7 +18,7 @@ module.exports = {
         }
       },
       movieId: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
         onDelete: "CASCADE",
         allowNull: false,
         references: {

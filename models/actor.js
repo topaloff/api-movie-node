@@ -1,6 +1,12 @@
 'use strict';
+
 module.exports = (sequelize, DataTypes) => {
   const Actor = sequelize.define('Actor', {
+    id: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      allowNull:false
+    },
     name: DataTypes.STRING,
     firstname: DataTypes.STRING,
     birth: DataTypes.DATE,

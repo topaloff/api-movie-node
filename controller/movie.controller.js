@@ -2,6 +2,7 @@ const Movie = require('../models/').Movie;
 const Category = require('../models/').Category;
 const Actor = require('../models/').Actor;
 const MovieActor = require('../models/').MovieActor;
+const uuidv4 = require("uuid/v4");
 
 /**
  * @api {get} /movies Show all movies
@@ -57,14 +58,28 @@ exports.movie_list = (req,res,next)=>{
  */
 exports.movie_detail = (req,res,next)=>{
     const id = req.params.id
-    Movie.findByPk(id)
-    .then(movie => {
-        res.json(movie);
-    })
-    .catch(error=>{
-        res.status(400);
-        res.json({message : 'il y a rien la'});
-    })
+    // Movie.findByPk(id)
+    // .then(movie => {
+    //     res.json(movie);
+    // })
+    // .catch(error=>{
+    //     res.status(400);
+    //     res.json({message : 'il y a rien la'});
+    // })
+    Movie.findAll({
+        where: { id: id },
+        include: {
+          model: Actor,
+          through: { attributes: [] } // this will remove the rows from the join table (i.e. 'UserPubCrawl table') in the result set
+        }
+      })
+      .then(movie => {
+            res.json(movie[0]);
+        })
+        .catch(error=>{
+            res.status(400);
+            res.json({message : 'il y a rien la'});
+        })
 }
 
 /**
@@ -97,7 +112,14 @@ exports.movie_add = (req,res,next) => {
         console.log('No File Uploaded');
         var filename = '';
     }
-    Movie.create(req.body)
+    Movie.create({
+        id: uuidv4(),
+        title: req.body.title,
+        description: req.body.description,
+        note: req.body.note,
+        year: req.body.year,
+        CategoryId: req.body.CategoryId,
+    })
     .then(movie => {
         const id = movie.id;
         Movie.update({"picture":filename}, {

@@ -1,6 +1,11 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Movie = sequelize.define('Movie', {
+    id: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      allowNull:false
+    },
     title: DataTypes.STRING,
     description: DataTypes.STRING,
     picture: DataTypes.STRING,
