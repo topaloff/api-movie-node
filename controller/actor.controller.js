@@ -2,6 +2,8 @@ const Actor = require('../models/').Actor;
 const Gender = require('../models/').Gender;
 const Movie = require('../models/').Movie;
 const Country = require('../models/').Country;
+
+
 const uuidv4 = require("uuid/v4");
 
 const multer = require('multer');
@@ -50,6 +52,43 @@ exports.actor_list = (req,res,next)=>{
         res.status(400);
         res.json(error);
     })
+}
+
+/**
+ *  * @api {get} /actors/balance Count Percent of male/female/third
+ * @apiName getActorsBalance
+ * @apiGroup Actor
+ * 
+ * 
+ * @apiSuccess {String} _id id of the Actor.
+ * @apiSuccess {String} name name of the Actor.
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "id": 1,
+ *       "name": "Blonde"
+ *     }
+ */
+exports.actor_balance= (req,res,next)=>{
+    let male = 0;
+    let female = 0;
+    let third = 0;
+    let all = 0;
+    Actor.count({
+        where: {
+          GenderId: {
+            [Op.gt]: 1
+          }
+        }
+    })    
+    .then(male => {
+        male = male
+    })
+    .catch(error=>{
+        res.status(400);
+        res.json({message : 'il y a rien la'});
+    })
+    res.json({'male': male})
 }
 
 /**

@@ -29,10 +29,40 @@ exports.movie_list = (req,res,next)=>{
         order: [['title', 'ASC']]
     })
     .then(movies => {
-        MovieActor.findAll({
-
-        })
-        res.json(movies);
+          res.json(movies);
+    })
+    .catch(error=>{
+        res.status(400);
+        res.json(error);
+    })
+}
+/**
+ * @api {get} /movies/best Show the 20 movies
+ * @apiName getMovies
+ * @apiGroup Movie
+ * @apiSuccess {String} _id id of the Movie.
+ * @apiSuccess {String} name name of the Movie.
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     [{
+ *       "id": 1,
+ *       "name": "Blonde"
+ *     }]
+ */
+exports.movie_list_best = (req,res,next)=>{
+    Movie.findAll({
+        limit: 20,
+        attributes: ['id','title','description','picture','year','note'], //Choose which fields to show
+        include: [
+            {
+                model: Actor,
+                attributes: ['id','name','firstname','birth','picture']
+            }   
+        ],
+        order: [['note', 'DESC']]
+    })
+    .then(movies => {
+         res.json(movies);
     })
     .catch(error=>{
         res.status(400);

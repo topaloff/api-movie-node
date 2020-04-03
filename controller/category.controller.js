@@ -81,6 +81,8 @@ exports.category_add = (req,res,next) => {
  */
 exports.category_edit = (req,res,next) => {
     const id = req.params.id;
+    console.log(req.body);
+    
     Category.update(req.body, {
         where: {
           id: id

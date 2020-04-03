@@ -16,6 +16,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 router.get('/',movie_controller.movie_list);
+router.get('/best',movie_controller.movie_list_best);
 router.post('/actor/:id', movie_controller.movie_add_actor);
 router.post('/add',upload.single('picture'),movie_controller.movie_add);
 router.put('/edit/:id',upload.single('picture'),movie_controller.movie_edit);
