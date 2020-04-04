@@ -8,6 +8,7 @@ const uuidv4 = require("uuid/v4");
 
 const multer = require('multer');
 
+const sequelize = require('sequelize');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -70,25 +71,19 @@ exports.actor_list = (req,res,next)=>{
  *     }
  */
 exports.actor_balance= (req,res,next)=>{
-    let male = 0;
-    let female = 0;
-    let third = 0;
-    let all = 0;
-    Actor.count({
-        where: {
-          GenderId: {
-            [Op.gt]: 1
-          }
-        }
-    })    
-    .then(male => {
-        male = male
+
+    Actor.findAll({
+        attributes: ['genderId', [sequelize.fn('count', sequelize.col('genderId')), 'count']],
+        include : [ //Show the association
+            { model: Gender, attributes: ['name']}],
+        group:['genderId'],
+        raw: true,
     })
+    .then(data => res.json(data))
     .catch(error=>{
         res.status(400);
         res.json({message : 'il y a rien la'});
     })
-    res.json({'male': male})
 }
 
 /**
