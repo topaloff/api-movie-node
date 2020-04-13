@@ -89,14 +89,6 @@ exports.movie_list_best = (req,res,next)=>{
  */
 exports.movie_detail = (req,res,next)=>{
     const id = req.params.id
-    // Movie.findByPk(id)
-    // .then(movie => {
-    //     res.json(movie);
-    // })
-    // .catch(error=>{
-    //     res.status(400);
-    //     res.json({message : 'il y a rien la'});
-    // })
     Movie.findAll({
         where: { id: id },
         include: {
@@ -298,7 +290,7 @@ exports.movie_add_actor = (req, res, next) => {
 /**
  * @api {get} /movies/years Distribution number of movie by year
  * @apiName getMovieYears
- * @apiGroup Actor
+ * @apiGroup Movie
  * 
  * 
  * @apiSuccess {String} _id id of the Actor.
@@ -316,6 +308,32 @@ exports.movie_list_year = (req,res,next)=>{
         attributes: [[sequelize.fn('count', sequelize.col('id')), 'value'],[sequelize.col('year'), 'data']],
         group:['year'],
         raw: true,
+    })
+    .then(data => res.json(data))
+    .catch(error=>{
+        res.status(400);
+        res.json({message : 'il y a rien la'});
+    })
+}
+
+/**
+ * @api {get} /movies/average Average note
+ * @apiName getMovieAverage
+ * @apiGroup Movie
+ * 
+ * 
+ * @apiSuccess {String} _id id of the Actor.
+ * @apiSuccess {String} name name of the Actor.
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "id": 1,
+ *       "name": "Blonde"
+ *     }
+ */
+exports.movie_average = (req,res,next)=>{
+    Movie.findAll({
+        attributes: [[sequelize.fn('AVG', sequelize.col('note')), 'value']]
     })
     .then(data => res.json(data))
     .catch(error=>{
