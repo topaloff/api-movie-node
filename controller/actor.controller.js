@@ -112,18 +112,15 @@ exports.actor_count= (req,res,next)=>{
         include : [ 
             { 
                 model: Actor,
-                attributes: ['name','firstname'],
                 include : [
                     {
                         model: Gender,
-                        attributes: ['name']
                     }
                 ]
             },
         ],
         order: [[sequelize.literal('value'), 'DESC']],
         group:['actorId'],
-        raw: true,
     })
     .then(data => res.json(data))
     .catch(error=>{

@@ -1,4 +1,6 @@
 const Category = require('../models/').Category;
+const Movie = require('../models/').Movie;
+const sequelize = require('sequelize');
 
 /**
  * @api {get} /categories Show all categories
@@ -21,6 +23,39 @@ exports.category_list = (req,res,next)=>{
     .catch(error=>{
         res.status(400);
         res.json(error);
+    })
+}
+/**
+ * @api {get} /categories/count Count movie by category
+ * @apiName getCategoriesCount
+ * @apiGroup Category
+ * 
+ * 
+ * @apiSuccess {String} _id id of the Actor.
+ * @apiSuccess {String} name name of the Actor.
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "id": 1,
+ *       "name": "Blonde"
+ *     }
+ */
+exports.category_count= (req,res,next)=>{
+    Movie.findAll({
+        attributes: [[sequelize.fn('count', sequelize.col('categoryId')), 'value'],[sequelize.col('Category.name'), 'data']],
+        include : [ 
+            { 
+                model: Category,
+                attributes: ['name'],
+            },
+        ],
+        group:['categoryId'],
+        raw: false,
+    })
+    .then(data => res.json(data))
+    .catch(error=>{
+        res.status(400);
+        res.json({message : 'il y a rien la'});
     })
 }
 
