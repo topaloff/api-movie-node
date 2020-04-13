@@ -17,6 +17,7 @@ const upload = multer({ storage });
 
 router.get('/',actor_controller.actor_list);
 router.get('/balance',actor_controller.actor_balance);
+router.get('/count',actor_controller.actor_count);
 router.post('/add',upload.single('picture'),actor_controller.actor_add);
 router.put('/edit/:id',upload.single('picture'),actor_controller.actor_edit);
 router.delete('/delete/:id', actor_controller.actor_delete);

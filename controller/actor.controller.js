@@ -1,6 +1,7 @@
 const Actor = require('../models/').Actor;
 const Gender = require('../models/').Gender;
 const Movie = require('../models/').Movie;
+const MovieActor = require('../models/').MovieActor;
 const Country = require('../models/').Country;
 
 
@@ -81,6 +82,47 @@ exports.actor_balance= (req,res,next)=>{
             },
         ],
         group:['genderId'],
+        raw: true,
+    })
+    .then(data => res.json(data))
+    .catch(error=>{
+        res.status(400);
+        res.json({message : 'il y a rien la'});
+    })
+}
+
+/**
+ * @api {get} /actors/count Count movie by actor
+ * @apiName getActorsCount
+ * @apiGroup Actor
+ * 
+ * 
+ * @apiSuccess {String} _id id of the Actor.
+ * @apiSuccess {String} name name of the Actor.
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "id": 1,
+ *       "name": "Blonde"
+ *     }
+ */
+exports.actor_count= (req,res,next)=>{
+    MovieActor.findAll({
+        attributes: [[sequelize.fn('count', sequelize.col('movieId')), 'value']],
+        include : [ 
+            { 
+                model: Actor,
+                attributes: ['name','firstname'],
+                include : [
+                    {
+                        model: Gender,
+                        attributes: ['name']
+                    }
+                ]
+            },
+        ],
+        order: [[sequelize.literal('value'), 'DESC']],
+        group:['actorId'],
         raw: true,
     })
     .then(data => res.json(data))
