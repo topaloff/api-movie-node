@@ -3,6 +3,7 @@ const Category = require('../models/').Category;
 const Actor = require('../models/').Actor;
 const MovieActor = require('../models/').MovieActor;
 const uuidv4 = require("uuid/v4");
+const sequelize = require('sequelize');
 
 /**
  * @api {get} /movies Show all movies
@@ -277,10 +278,10 @@ exports.movie_delete = (req,res,next) => {
  */
 exports.movie_add_actor = (req, res, next) => {
     const id = req.params.id;
-    console.log(req.body.actorId)   
+    console.log(req.body.actorId) 
     Movie.findByPk(id)
     .then(movie => {
-        movie.setActors(req.body.actorId)
+        movie.setActors(req.body.actorId) //j aurais pu utiliser les bulkCreate a la place
         .then(data => res.json('ok'))
         .catch(error=>{
             res.status(400);
@@ -293,3 +294,32 @@ exports.movie_add_actor = (req, res, next) => {
     })
 }
 
+
+/**
+ * @api {get} /movies/years Distribution number of movie by year
+ * @apiName getMovieYears
+ * @apiGroup Actor
+ * 
+ * 
+ * @apiSuccess {String} _id id of the Actor.
+ * @apiSuccess {String} name name of the Actor.
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "id": 1,
+ *       "name": "Blonde"
+ *     }
+ */
+exports.movie_list_year = (req,res,next)=>{
+
+    Movie.findAll({
+        attributes: [[sequelize.fn('count', sequelize.col('id')), 'value'],[sequelize.col('year'), 'data']],
+        group:['year'],
+        raw: true,
+    })
+    .then(data => res.json(data))
+    .catch(error=>{
+        res.status(400);
+        res.json({message : 'il y a rien la'});
+    })
+}

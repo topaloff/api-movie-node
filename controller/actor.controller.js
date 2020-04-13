@@ -73,9 +73,13 @@ exports.actor_list = (req,res,next)=>{
 exports.actor_balance= (req,res,next)=>{
 
     Actor.findAll({
-        attributes: ['genderId', [sequelize.fn('count', sequelize.col('genderId')), 'count']],
-        include : [ //Show the association
-            { model: Gender, attributes: ['name']}],
+        attributes: [[sequelize.fn('count', sequelize.col('genderId')), 'value'],[sequelize.col('Gender.name'), 'data']],
+        include : [ 
+            { 
+                model: Gender,
+                attributes: ['name'],
+            },
+        ],
         group:['genderId'],
         raw: true,
     })
@@ -283,7 +287,7 @@ exports.actor_add_movie = (req, res, next) => {
     const id = req.params.id;    
     Actor.findByPk(id)
     .then(actor => {
-        actor.setActors(req.body.actorId)
+        actor.setMovies(req.body.movieId)
         .then(data => res.json('ok'))
         .catch(error=>{
             res.status(400);

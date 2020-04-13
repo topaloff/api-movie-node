@@ -21,6 +21,7 @@ router.post('/actor/:id', movie_controller.movie_add_actor);
 router.post('/add',upload.single('picture'),movie_controller.movie_add);
 router.put('/edit/:id',upload.single('picture'),movie_controller.movie_edit);
 router.delete('/delete/:id', movie_controller.movie_delete);
+router.get('/years',movie_controller.movie_list_year);
 router.get('/:id',movie_controller.movie_detail);
 
 module.exports = router;
